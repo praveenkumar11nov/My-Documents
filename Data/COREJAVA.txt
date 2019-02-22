@@ -1,0 +1,161 @@
+===========================
+Tell me about your self
+tell me about your project briefly?
+diff between interface and abstrat class?
+why we use constructer in abstract class?
+JSP implicit objects?
+Difference between Servlet and jsp?
+diff bwtn Session factory and session?
+diff btwn jboss and apache?
+hybernate features?
+what is savepoint ?
+diff btwn beanfactory and applicationcontext?
+what are the types of dependency injections?
+what is ioc container?
+what is flush method in hibernate?
+implicit objects?
+What are strategies to solve the N+1 SELECT problem in Hibernate?
+
+
+------>instance of subclass created then first parent class constructor is called then subclas constructor is called. <internally using super() keyword>
+ 
+===============================================================
+Technical Round
+
+Tell me about your project?
+which software development life cycle are you following?
+what is enhancement period?
+How you resolve any problem which occur in your project?
+how junit testing will be done?
+which bug tracking tool have you used?
+how you configure .xml file?
+how many ways implement application context containers? and which type of container is used in your project?
+
+===============================================================
+CAPGEMINI INTERVIEW QUESTION :
+
+how to multiply two arrays?
+write a program how do you use implementation of particular collection in your bean tag? using iterators print collection elements?
+find the all pairs of elements sum is equal to given number in an array?
+
+==============================================================
+CAPGEMINI INTERVIEW QUESTION :
+
+Tell me about Your self?
+How Many projects Have you done?
+About Icgc company?
+Tell me about your project?
+methods present in set interface?
+object class methods?
+Thread life cycle?
+how to go back from running state to runnable state ?
+collection and collections diff?
+jdbc connections steps?
+given array of elements [1,2,34,45,4,6,7,8,9] store these elements in table (3x3)?
+Spring modules and versions?
+hibernate version in your project?
+how many types hibernate relationships?
+scopes of spring bean ?
+diff btwn singletone and prototype?
+life cycle methods of spring bean?
+
+ 
+==============================================================
+1-  What is singleton?
+2-  Methods we can write in Abstract class are?
+3-  Jdbc connection proprties.
+4-  What is RequestDispatcher?
+5-  What is Implicit object?
+6-  Give list of Controller classes in spring?
+7-  SQL and advantages?
+8-  What is CSS programming language?
+9-  How to use external javascript file?
+10- How to create Function in javasript?
+11- What are available Cache in Hibernate?
+12- Write a program to implement hashcode and equals.
+13- Write a program to check the given number is binary number or not?
+14- Sort a Stack using a temporary Stack
+
+==============================================================
+Breau VERITAS product services:
+
+1.Triggers in sql
+2.joins in sql
+3.filters in servelt
+4.log file purpose 
+5.diff between  hashset and treeset
+
+CGI:
+1.pros and cons of Tomcat
+2.webserver vs application server
+3.use of index
+4.Normal forms in SQL
+5.use of criteria
+
+==============================================================
+INFOSYS:
+1.what are the wings of oops?
+2.custom thread can be creates in how many ways? Which one is better? Why?
+3.Explain Exception handling?
+4.try contains infinite loop followed by finally block.answer that whether finally will get executed or not?
+5.diff between hashset and tree set?
+6.how hashmap works internally?
+7.jdbc connection is made using which class?who is responsible to provide implementation?
+8.Class notfound vs ClassDefinitionNotFound
+9.no of configuration file vs no of database used?
+10.where you can store your code?
+11.How to get private repository in github?
+12.how to use Datasource object ?
+
+
+============================================================================================================================
+what is hibernate famework and advantage,hibernate architecture and components
+what is hibernate.cfg file
+what is hbernate dialects
+explain steps involved in working with hibernate using hbm.xml file
+explain steps involved in working with hibernate using annotations
+hibernate inheritance mapping
+what is Generator class in hibernate
+what is lazy loading in hibernate
+what is HQL and its advantage
+what is HCQL and its advantage
+what are named quaries in hibernate
+explain caching in hibernate,1st level,2nd level and Differneces
+what are different states of object in hibernate !!! Transient,Persistence,Detached
+what is difference between get() and load()
+what is difference update and merge
+automatic dirty checking in hibernate
+why is proxy object in hibernate
+
+
+
+
+
+
+
+:::::::::::::::In simple terms, Iterable and Iterator are both interfaces provided in Java's Collection Framework.
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+::Iterable::
+A class has to implement the Iterable interface if it wants to have a for-each loop to iterate over its collection. 
+However, the for-each loop can only be used to cycle through the collection in the forward direction and 
+you won't be able to modify the elements in this collection. But, if all you want is to read the elements data, 
+then it's very simple and thanks to Java lambda expression it's often one liner. For example:
+
+iterableElements.forEach (x -> System.out.println(x) );
+:::::::::::::::::::::::::::::::::::Iterator:::::::::::::::::::::::::::::::::::
+This interface enables you to iterate over a collection, obtaining and removing its elements. 
+Each of the collection classes provides a iterator() method that returns an iterator to the start of the collection. 
+The advantage of this interface over iterable is that with this interface you can add, modify or remove elements in a collection. 
+But,accessing elements needs a little more code than iterable.
+:::::::::For example::::::::::
+for (Iterator i = c.iterator(); i.hasNext(); ) {
+  Element e = i.next();
+  System.out.println(e);
+}
+
+
+
+
+
+
+

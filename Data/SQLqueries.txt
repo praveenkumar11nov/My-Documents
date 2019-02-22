@@ -1,0 +1,341 @@
+************************************* to show specific number of records in grid *********************************************
+Create a Database in oracle:
+:::::::::::Command:::::::::::
+SQL> create user CLIENT_TEST identified by client_test_password;
+SQL> GRANT CONNECT,UNLIMITED TABLESPACE,RESOURCE TO CLIENT_TEST;
+SQL> exit
+
+
+https://chartio.com/resources/tutorials/how-to-create-a-user-and-grant-permissions-in-oracle/
+CREATE USER books_admin IDENTIFIED BY Password;
+GRANT CONNECT TO books_admin;
+GRANT CONNECT, RESOURCE, DBA TO books_admin;
+GRANT CREATE SESSION GRANT ANY PRIVILEGE TO books_admin;
+GRANT UNLIMITED TABLESPACE TO books_admin;
+
+::::::::::::::::Export Dump::::::::::::::::
+exp UserName/Password@DataBaseName file="location"
+
+
+::::::::::::::::import dump into schema::::::::::::::::
+::::::::::::::::to create dump directory
+CREATE OR REPLACE DIRECTORY DATA_PUMP_DIR AS 'E:\app\bcitsws54/admin/orcl/dpdump/';
+SELECT directory_name, directory_path FROM dba_directories WHERE directory_name='DATA_PUMP_DIR'
+
+impdp Test_Dump/sadmin@connect_identifier directory=DATA_PUMP_DIR dumpfile=K.dmp logfile=filename.log
+imp fromuser='' touser='' file=
+
+
+::::::::::::::::Create Task Schedule in windows::::::::::::::::
+https://www.youtube.com/watch?v=yqi2J6rHwb4
+
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+SELECT * FROM (
+	SELECT row_number() over (order by CONSUMID DESC)sn,p.* FROM PREPAID_DAILY_CONSUMPTION p WHERE p.METER_NUMBER='900043'  
+)WHERE sn BETWEEN 1 AND 5;
+----------------------------------------------------------------------------------------------
+SELECT * FROM CUSTOMERS;
+SELECT * FROM CUSTOMERS_DETAILS;
+SELECT * FROM CUSTOMER_VIEW;
+-----------------------------------CRETAING SEQUENCE------------------------------------------
+CREATE SEQUENCE CUSTOMERS_SEQ
+ START WITH     1000
+ INCREMENT BY   1
+ NOCACHE
+ NOCYCLE;
+-----------------------------------SELECTING SEQUENCE------------------------------------------
+SELECT CUSTOMERS_SEQ.NEXTVAL FROM DUAL;
+select * from user_sequences where sequence_name  = 'ONLINE_PAYMENT_ID_SEQ';
+-----------------------------------CRETAING TABLE----------------------------------------------
+CREATE TABLE CUSTOMERS  
+( 
+  CID NUMBER(10) NOT NULL,  
+  NAME VARCHAR2(50) NOT NULL,  
+  CITY VARCHAR2(50),  
+  CONSTRAINT CUSTOMERS_PK PRIMARY KEY (CID)  
+); 
+-----------------------------------INSERTING INTO SEQUENCE--------------------------------------
+INSERT INTO CUSTOMERS(CID,NAME,CITY) VALUES(CUSTOMERS_SEQ.NEXTVAL,'PRAVEEN KUMAR','BANGALORE');
+INSERT INTO CUSTOMERS(CID,NAME,CITY) VALUES(CUSTOMERS_SEQ.NEXTVAL,'SACHIN KUMAR','BANGALORE');
+INSERT INTO CUSTOMERS(CID,NAME,CITY) VALUES(CUSTOMERS_SEQ.NEXTVAL,'SATISH KUMAR','BANGALORE');
+INSERT INTO CUSTOMERS(CID,NAME,CITY) VALUES(CUSTOMERS_SEQ.NEXTVAL,'VINAY KUMAR','BANGALORE');
+INSERT INTO CUSTOMERS VALUES(CUSTOMERS_SEQ.NEXTVAL,'RAVI KUMAR','BANGALORE');
+-----------------------------------using INSERT ALL----------------------------------------
+INSERT ALL  
+  INTO CUSTOMERS(CID,CUSTOMER_NAME,CITY) VALUES(CUSTOMERS_SEQ.NEXTVAL,'RAJEEV KUMAR','PATNA')
+  INTO CUSTOMERS_DETAILS(ID,AGE,MOBILE)  VALUES(CUSTOMERS_DETAILS_SEQ.NEXTVAL,'26','0123965874')  
+SELECT * FROM dual;
+-----------------------------------UPDATING THE VALUES--------------------------------------------
+UPDATE CUSTOMERS_DETAILS SET CID=1007 WHERE ID=1005;
+-----------------------------------CRETAING TABLE AS STATEMENT------------------------------------
+CREATE TABLE NEWCUSTOMERS AS (SELECT * FROM CUSTOMERS);---COPY ONE TABLE WITH DATA INTO A NEW TABLE
+
+-----------------------------------ALTER TABLE------------------------------------
+--ALTER TABLE statement specifies how to add, modify, drop or delete columns in a table. It is also used to rename a table
+ALTER TABLE CUSTOMERS ADD AGE varchar2(20);  --ADING A COLUMN
+ALTER TABLE CUSTOMERS ADD (TYPE varchar2(50),MOBILE varchar2(50));  -- ADDING A MULTIPLE COLUMNS
+ALTER TABLE CUSTOMERS MODIFY (NAME varchar2(60),CITY varchar2(60)); -- MODIFY  MULTIPLE COLUMNS
+ALTER TABLE CUSTOMERS DROP COLUMN MOBILE;  							-- DROPPING A COLUMN
+ALTER TABLE CUSTOMERS RENAME COLUMN NAME to CUSTOMER_NAME;          -- RENAMING A COLUMN
+ALTER TABLE CUSTOMERS RENAME TO OURCUSTOMERS; 						-- RENAMING A TBALE
+
+-----------------------------------DROPPING A TABLE------------------------------------
+--IT IS USED T DELETE ENTIRE RECORDS ALONG WITH TABLE STRUCTURE
+--DROP [SCHEMA_NAME].TABLE TABLE_NAME [CASCADE CONSTRAINTS] [PURGE];   
+--Parameters
+--SCHEMA_NAME: It specifies the name of the schema that owns the table.
+--TABLE_NAME : It specifies the name of the table which you want to remove from the Oracle database.
+--CASCADE CONSTRAINTS: It is optional. If specified, it will drop all referential integrity constraints as well.
+--PURGE: It is also optional. If specified, the table and its dependent objects are placed in the recycle bin and can?t be recovered.
+DROP TABLE OURCUSTOMERS;
+----------------------DELETING A RCORD FROM TABLE--------------------
+DELETE FROM CUSTOMERS WHERE CUSTOMER_NAME='Sohan';
+----------------------TRUNCATING A TABLE-----------------------------
+--TRUNCATE TABLE statement is used to remove all records from a table
+TRUNCATE TABLE CUSTOMERS; 
+
+------------------------------------CREATING A VIEW IN ORACLE------------------------------
+CREATE VIEW CUSTOMER_VIEW AS  
+SELECT C.CUSTOMER_NAME,C.CITY,CD.AGE,CD.MOBILE
+FROM CUSTOMERS C
+INNER JOIN CUSTOMERS_DETAILS CD
+ON C.CID = CD.CID  ;
+------------------------------------UPDATING A VIEW IN ORACLE------------------------------
+CREATE or REPLACE VIEW CUSTOMER_VIEW AS  
+SELECT C.CUSTOMER_NAME,C.CITY,CD.AGE,CD.MOBILE
+FROM CUSTOMERS C
+INNER JOIN CUSTOMERS_DETAILS CD
+ON C.CID = CD.CID WHERE C.CUSTOMER_NAME='PRAVEEN KUMAR';
+------------------------------------DROPPING A VIEW IN ORACLE------------------------------
+DROP VIEW CUSTOMER_VIEW; 
+
+-------------------------------------CREATING A STORE PROCEDURE---------------------------
+CREATE OR REPLACE 
+PROCEDURE STOREPROCEDURE1(QUERY OUT VARCHAR2,ACCOUNT_ID IN VARCHAR2)
+AS
+BEGIN
+
+QUERY:='SELECT  A.ACCOUNT_NO,PRO.PROPERTY_NO,(P.FIRST_NAME||P.MIDDLE_NAME||P.LAST_NAME)AS PNAME 
+FROM ACCOUNT_VV A,SERVICE_MASTER SM,BILLING_WIZARD BW,PERSON P,PROPERTY PRO 
+WHERE A.ACCOUNT_ID=SM.ACCOUNT_ID AND SM.ACCOUNT_ID=BW.ACCOUNT_ID AND A.PERSON_ID=P.PERSON_ID 
+AND A.PROPERTYID=PRO.PROPERTY_ID AND A.ACCOUNT_ID='''||ACCOUNT_ID||'''';
+
+--DBMS_OUTPUT.PUT_LINE('QUERY======>' || QUERY);
+
+END;
+----------------------------------To get all column namnes-------------------------------------------------
+select column_name from user_tab_columns where table_name='ONLINE_PAYMENT' ORDER BY column_id;
+
+
+
+-----------------------------HOW TO INSERT USING STORE PROCEDURE--------------------------------------------
+----------------------------------------------------------TABLE_NAME= stud_tab  COLUMNS ARE <id,name,branch>
+CREATE OR REPLACE PROCEDURE INSERTRECORD(
+	   p_id IN "stud_tab"."id"%TYPE,
+	   p_name IN "stud_tab"."name"%TYPE,
+	   p_branch IN "stud_tab"."branch"%TYPE)
+IS
+BEGIN
+
+  INSERT INTO "stud_tab" ("id", "name", "branch") VALUES (p_id, p_name,p_branch);
+
+  COMMIT;
+
+END;
+---------RUN ABOVE PROCEDURE---------------
+BEGIN
+   INSERTRECORD(6,'mohan','ece');
+END;
+
+
+------------------------------HOW TO UPDATE DATA USING STORE PROCEDURE--------------------------------------------
+CREATE OR REPLACE 
+PROCEDURE UPDATERECORD(
+	   p_id IN "stud_tab"."id"%TYPE,
+	   p_name IN "stud_tab"."name"%TYPE,
+	   p_branch IN "stud_tab"."branch"%TYPE)
+IS
+BEGIN
+
+  UPDATE "stud_tab" SET "name"=p_name;
+
+  COMMIT;
+
+END;
+---------RUN ABOVE PROCEDURE---------------
+BEGIN
+   UPDATERECORD(6,'SOHAN','ECE');
+END;
+
+
+
+---------------------------HOW TO DISPLAY THE TABLE DATA USING STORE PROCEDURE--------------------------------------
+CREATE OR REPLACE PROCEDURE DISPLAYRECORD(
+	   p_id IN OUT "stud_tab"."id"%TYPE,
+	   p_name OUT "stud_tab"."name"%TYPE,
+	   p_branch OUT  "stud_tab"."branch"%TYPE)
+IS
+BEGIN
+
+  SELECT "id","name","branch"
+  INTO p_id,p_name,p_branch
+  from "stud_tab" WHERE "id"=p_id;
+
+END;
+---------TO RUN ABOVE PROCEDURE---------------
+DECLARE
+   p_id "stud_tab"."id"%TYPE;
+   p_name "stud_tab"."name"%TYPE;
+   p_branch "stud_tab"."branch"%TYPE;
+BEGIN
+
+   DISPLAYRECORD(1,p_name,p_branch);
+
+   DBMS_OUTPUT.PUT_LINE('ID=' || p_id);
+   DBMS_OUTPUT.PUT_LINE('NAME=' || p_name);
+   DBMS_OUTPUT.PUT_LINE('BRANCH=' || p_branch);
+
+END;
+
+
+Table Details in POSTGRES=================================================>
+SELECT * FROM all_tables WHERE owner = 'IREO_SKYON';
+SELECT * FROM user_tables WHERE table_name = 'LEDGER';
+SELECT * FROM dba_tables WHERE table_name='LEDGER';
+
+SELECT TABLE_NAME,COLUMN_NAME,DATA_TYPE,DATA_LENGTH FROM USER_TAB_COLUMNS WHERE TABLE_NAME='LEDGER';
+SELECT TABLE_NAME,COLUMN_NAME,DATA_TYPE,DATA_LENGTH FROM ALL_TAB_COLUMNS WHERE TABLE_NAME='LEDGER' AND OWNER='IREO_SKYON';
+
+Table Details in POSTGRES=================================================>
+SELECT table_name,column_name,data_type,character_maximum_length 
+FROM information_schema.columns WHERE table_schema='jvvnlpgrs' AND table_name='ncpt_onlinepaymentsbd';
+
+
+-----------query to fetch only the first name(string before space) from the FullName column in oracle---------
+SELECT "SUBSTR"(USER_NAME, 0,"INSTR"(USER_NAME,' ')-1) FROM "USERS" WHERE "ID"='3530';
+**INSTR('word','char')***********>Returns the first occurance of the character
+
+
+--------------------------creating duplcate table with all data of that table(Cpoy/Backup of the existing tbale)-----------
+CREATE TABLE LEDGER_BACKUP_21052018 AS SELECT * FROM LEDGER; 
+
+========================================USING PIVOT IN ORACLE============================================================
+SELECT * FROM(
+SELECT SITECODE,SUM(AMOUNT)AS AMOUNT,PAYMENTTHROUGH FROM ONLINE_PAYMENT GROUP BY SITECODE,PAYMENTTHROUGH
+)PIVOT(
+SUM(AMOUNT)FOR PAYMENTTHROUGH IN(
+		'EMITRA','PAYTMAPP','WEBBILLDESK','QPWEBPAYTM','WEBPAYTM','INSTAPAY','MOBILEPAYTM','MOBILEBILLDESK'
+	)
+);
+-----------------------------------------------------------------------------------------
+SELECT * FROM(SELECT SDOCODE,PAYTOWARDS,sum(AMOUNT)AS AMOUNT FROM PAYMENTS  GROUP BY SDOCODE,PAYTOWARDS)
+pivot(
+	sum(AMOUNT) FOR PAYTOWARDS IN(
+		'EMITRA','MISC CHARGES','PAYTMAPP','CASH','QPWEBPAYTM','WEBBILLDESK','WEBPAYTM','TEMP ADVANCE SECURITY',
+		'INSTAPAY','BILL','CHEQUE','MOBILEPAYTM','ADDITIONAL SECURITY DEPOSIT','MOBILEBILLDESK'
+	)
+);
+-----------------------------------------------------------------------------------------
+SELECT B.SUBDIVISION,A.* FROM(
+	SELECT * FROM(
+	SELECT SITECODE,SUM(AMOUNT)AS AMOUNT,PAYMENTTHROUGH FROM ONLINE_PAYMENT WHERE STATUS='1'
+	GROUP BY SITECODE,PAYMENTTHROUGH
+)PIVOT(
+SUM(AMOUNT)FOR PAYMENTTHROUGH IN(
+			'EMITRA','PAYTMAPP','WEBBILLDESK','QPWEBPAYTM','WEBPAYTM','INSTAPAY','MOBILEPAYTM','MOBILEBILLDESK'
+		)
+	)
+)A
+LEFT JOIN(SELECT SITECODE,SUBDIVISION FROM "LOCATION")B ON A.SITECODE=B.SITECODE
+
+========================================================================================================================
+------MATERIALIZE VIEW ----------------
+------DATA TAKING FROM VIEWs-----------
+-- CRETING VIEW IN EACH SCHEMA
+--(1)
+CREATE OR REPLACE VIEW DH1_2109110.TPAYMENT_TEST AS
+SELECT 'AEN_A-1_DHOLPUR' AS SUBDIVISION, 'DH1_2109110' AS SCHEMA, '2109110' AS SITECODE, COUNT(*) AS TRANSACTION FROM(
+SELECT SDOCODE, ACCNO, RECNO, AMOUNT, RDATE, PAYTOWARDS, MODEOFPAYMENT, KNO, PAYMENT_TYPE FROM DH1_2109110.TPAYMENTS  
+WHERE to_char(RDATE,'yyyyMM')=to_char(SYSDATE,'yyyyMM'))A 
+LEFT JOIN(
+SELECT SDOCODE, ACCNO, RECNO, AMOUNT, RDATE, PAYTOWARDS, MODEOFPAYMENT, KNO, PAYMENT_TYPE FROM DH1_2109110.PAYMENTS 
+WHERE to_char(RDATE,'yyyyMM')=(to_char(SYSDATE,'yyyyMM')) AND 
+PAYTOWARDS NOT IN('EMITRA','PAYTMAPP','WEBBILLDESK','QPWEBPAYTM','WEBPAYTM','INSTAPAY','MOBILEPAYTM','MOBILEBILLDESK')
+)B ON A.RECNO=B.RECNO 
+WHERE B.RECNO IS NULL;
+
+--(2)
+CREATE OR REPLACE VIEW DH2_2109120.TPAYMENT_TEST AS
+SELECT 'AEN_A-2_DHOLPUR' AS SUBDIVISION, 'DH2_2109120' AS SCHEMA, '2109120' AS SITECODE, COUNT(*) AS TRANSACTION FROM(
+SELECT SDOCODE, ACCNO, RECNO, AMOUNT, RDATE, PAYTOWARDS, MODEOFPAYMENT, KNO, PAYMENT_TYPE FROM DH2_2109120.TPAYMENTS  
+WHERE to_char(RDATE,'yyyyMM')=to_char(SYSDATE,'yyyyMM'))A 
+LEFT JOIN(
+SELECT SDOCODE, ACCNO, RECNO, AMOUNT, RDATE, PAYTOWARDS, MODEOFPAYMENT, KNO, PAYMENT_TYPE FROM DH2_2109120.PAYMENTS 
+WHERE to_char(RDATE,'yyyyMM')=(to_char(SYSDATE,'yyyyMM')) AND 
+PAYTOWARDS NOT IN('EMITRA','PAYTMAPP','WEBBILLDESK','QPWEBPAYTM','WEBPAYTM','INSTAPAY','MOBILEPAYTM','MOBILEBILLDESK')
+)B ON A.RECNO=B.RECNO 
+WHERE B.RECNO IS NULL;
+
+--(3)
+CREATE OR REPLACE VIEW ALW1_2101110.TPAYMENT_TEST AS
+SELECT 'AEN_A-1_ALWAR' AS SUBDIVISION, 'ALW1_2101110' AS SCHEMA, '2101110' AS SITECODE, COUNT(*) AS TRANSACTION FROM(
+SELECT SDOCODE, ACCNO, RECNO, AMOUNT, RDATE, PAYTOWARDS, MODEOFPAYMENT, KNO, PAYMENT_TYPE FROM ALW1_2101110.TPAYMENTS  
+WHERE to_char(RDATE,'yyyyMM')=to_char(SYSDATE,'yyyyMM'))A 
+LEFT JOIN(
+SELECT SDOCODE, ACCNO, RECNO, AMOUNT, RDATE, PAYTOWARDS, MODEOFPAYMENT, KNO, PAYMENT_TYPE FROM ALW1_2101110.PAYMENTS 
+WHERE to_char(RDATE,'yyyyMM')=(to_char(SYSDATE,'yyyyMM')) AND 
+PAYTOWARDS NOT IN('EMITRA','PAYTMAPP','WEBBILLDESK','QPWEBPAYTM','WEBPAYTM','INSTAPAY','MOBILEPAYTM','MOBILEBILLDESK')
+)B ON A.RECNO=B.RECNO 
+WHERE B.RECNO IS NULL;
+
+
+-- CREATE MATERIALIZE VIEW
+CREATE MATERIALIZED VIEW TPAYMENT_M_TEST AS
+SELECT * FROM DH1_2109110.TPAYMENT_TEST UNION ALL
+SELECT * FROM DH2_2109120.TPAYMENT_TEST UNION ALL
+SELECT * FROM ALW1_2101110.TPAYMENT_TEST;
+
+
+-- VIEW IN EACH SCHEMA
+SELECT * FROM DH1_2109110.TPAYMENT_TEST;
+SELECT * FROM DH2_2109120.TPAYMENT_TEST;
+SELECT * FROM ALW1_2101110.TPAYMENT_TEST;
+
+
+-- MATERIALIZE VIEW
+SELECT * FROM TPAYMENT_M_TEST;
+
+========================================================================================================================
+
+SELECT count(*) AS TOTAL,
+sum(CASE WHEN STATUS=1 THEN 1 END)as synced,
+sum(CASE WHEN STATUS=0 THEN 1 END)as unsynced,
+max(CREATEDDATE) AS FROM_DATE,
+min(CREATEDDATE) AS TO_DATE
+FROM ONLINE_PAYMENT WHERE CREATEDDATE > SYSDATE -(7/24);
+
+SELECT count(*) FROM ONLINE_PAYMENT WHERE CREATEDDATE > SYSDATE -(24/24);
+SELECT count(*) FROM ONLINE_PAYMENT WHERE CREATEDDATE >= SYSDATE - 7/(24*60);
+
+
+CREATE SEQUENCE serial START 101;
+SELECT setval('ncpt_onlinepaymentsbd_id_seq1', max("id")) FROM ncpt_onlinepaymentsbd;
+
+-----------------copy one column a table to another column-------------------
+UPDATE ncpt_onlinepaymentsbd  
+SET transactionid=billdesk.tid,paymentstatus='1',online_paidamt=billdesk.amount
+FROM billdesk
+WHERE 
+billdesk.oid = ncpt_onlinepaymentsbd.custorderid 
+and billdesk.kno = ncpt_onlinepaymentsbd.accountid 
+and ncpt_onlinepaymentsbd.transactionid='';
+
+-------------------------
+ALTER TABLE billdesk
+ADD COLUMN status VARCHAR(20);
+
+
+************************************************SOURCES FOR PROCEDURE******************************************************
+************************* https://www.mkyong.com/oracle/oracle-stored-procedure-select-into-example/ **********************

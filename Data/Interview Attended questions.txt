@@ -1,0 +1,215 @@
+﻿                              SLK Software Solutions interview questions
+
+1.	What is immutable class? How to create immutable class? Why we use immutable class ?
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+Immutable class means that once an object is created, we cannot change its content. In Java, all the wrapper classes
+(like String, Boolean, Byte, Short) and String class is immutable. We can create our own immutable class as well. 
+Using immutable Class we can achieve Thread Safe because the state cannot be changed no synchronization is required.
+Following are Requirements to make Class Immutable :
+i.	Class must be declared as final (so that child classes can’t be created).
+ii.	Data members in Class must be declared as final (so that we can’t change the value of it after object creation ) and private.
+iii.	A parameterized constructor
+iv.	Getter methods for all the variables in it.
+v.	No setters (to not have a option to change the value of instance variables)
+
+ // An immutable class
+public final class Student
+{
+        final String name;
+        final int regNo;
+        public Student(String name, int regNo)
+       {
+             this.name = name;
+             this.regNo = regNo;
+       }
+       public String getName()
+      {
+        return name;
+    }
+    public int getRegNo()
+    {
+        return regNo;
+    }
+}
+class Test
+{
+    public static void main(String args[])
+    {
+        Student s = new Student("ABC", 101);
+        System.out.println(s.name);
+        System.out.println(s.regNo);
+ 
+        // Uncommenting below line causes error
+        // s.regNo = 102;
+    }
+}
+o/p : ABC
+        101
+
+2.	What is abstract class ? when abstract class constructor gets executed and when to use abstract class?
+A class declared with abstract keyword is known as abstract class. An abstract class can have a. only concrete methods b. only abstract methods
+c. both concrete and abstract methods. We cannot create an instance of abstract class , hence we cannot refer or access the instance members of abstract class. 
+If abstract class has static members then we can access it through class name. If a class is declared as abstract it is not mandatory to have abstract methods.
+If any class is having abstract methods then the class must be mandatorily declared as abstract.
+If a java class inherits the abstract behaviors from abstract class then subclass must define the definition for inherited abstract methods otherwise class
+should be declared  as abstract.
+The abstract method of a abstract class can be overrided in any level of subclasses. If subclasses doesn’t specify the body for abstract methods then the class
+must be made as abstract.
+ 
+abstract class Sample1
+{
+	int a,b;
+     Sample1(int x,int y)
+     {
+    	 a=x;
+    	 b=y;
+    	 System.out.println("Sample1 Constructor a = "+a+" , b = "+b);
+     }
+}
+class Example extends Sample1{
+	
+	Example()
+	{
+		super(10,6);
+		System.out.println("Example");
+	}
+}
+
+public class Test {
+	public static void main(String[] args) {
+		
+		Example example = new Example();	
+		
+	}
+
+}
+o/p : Sample1 Constructor a = 10 , b = 6
+
+Example
+
+
+                                                     Iween softeare solutions interview questions
+													 
+1.	Validate expression : [(a+b)+(b+c)]
+2.	Permutation xyz 
+3.	Remove duplicates from string i/p : Samsung      o/p : samung
+4.	i/p : iwees@bangalore    o/p : iwees Bangalore
+5.	i/p t1,t5,t2,t1,t5,t1,t3       o/p : t1 : 3 , t2 : 1 , t3 : 1, t5 : 2
+
+
+
+ 
+                                                        Zensar Software technologies 
+														
+1.	class Sample
+    {
+       public test(Integer i)
+       {
+                 sysout(i);
+       }
+       public test(String s)
+       {
+                 sysout(s);
+       }	
+   }
+
+   Class MainSample 
+   { 
+         Main()
+         {
+            Sample s = new Sample();
+            s.test(null);
+         }   
+   }
+
+     o/p : compile time error saying The method test(Integer) is ambiguous for the type 
+	 
+	 
+2.  can we create instance of anstract class ?
+3.  what is interface and abstract ?
+4.  what is immutable class in Java and have u used any immutable class in ur project ?
+5.  what is singleton class in Java and have u used anywhere in ur project ?
+6.  what is spring MVC ?
+7.  what is Dependency Injection and IOC in Spring ?
+8.  what is polymorphism ?
+9.  what is co-variant variables in Java ?
+10. what is Comparator and Comparable Interface Explain with an Example ?
+11. how to print entry of each Map in Java ? 
+
+for example 
+Map<String,Integer> map = new HashMap<>();  
+map.put("java" 2);
+map.put("j2ee",4);  
+  
+o/p : 
+key = java , value = 2    
+key = j2ee , value = 4
+
+12. what is difference between ArrayList and Vector in Java ?
+13. when to use ArrayList and LinkedList ?
+
+14. class SampleInteger {
+           int a = null;
+		   Integer b = a;
+	}
+	
+	o/p : complie time error ( Type mismatch: cannot convert from null to int )
+	
+15. what is super() and this() statement ?
+16. public int testing()
+	{
+		try 
+		{
+			System.out.println("inside try");
+			return 1;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			System.out.println("Inside finally");
+		}
+		return 0;
+		
+	}
+	  
+	  will finally block executes ? 
+	  o/p  : 
+              inside try
+              Inside finally
+              1
+
+17. public void testing()
+	{
+		try 
+		{
+			System.out.println("inside try");
+			System.exit(0);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			System.out.println("Inside finally");
+		}
+		
+	}			  
+	  
+	 o/p : inside try
+	 
+
+18. difference between Map and FlatMap ?
+19. write a query to get second highest salary from employee table.
+	 
+
+
+
+https://career.guru99.com/top-50-j2ee-interview-questions/
+http://www.j2eebrain.com/java-J2ee-jdbc-interview-questions.html
+https://www.softwaretestinghelp.com/j2ee-interview-questions-answers/
+http://www.recruitmentinboxx.com/j2ee-interview-questions-and-answers/3477/
+https://www.javatpoint.com/servletinterview
