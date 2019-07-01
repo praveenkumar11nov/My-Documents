@@ -200,7 +200,7 @@ BEGIN
 END;
 
 
-Table Details in POSTGRES=================================================>
+Table Details in ORACLE=================================================>
 SELECT * FROM all_tables WHERE owner = 'IREO_SKYON';
 SELECT * FROM user_tables WHERE table_name = 'LEDGER';
 SELECT * FROM dba_tables WHERE table_name='LEDGER';

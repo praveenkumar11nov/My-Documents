@@ -1,3 +1,5 @@
+cd C:\Program Files\PostgreSQL\9.6\bin 
+
 C:\Program Files\PostgreSQL\9.6\bin>psql -h localhost -p 5432 -U postgres                                                                                               
 Password for user postgres:12345                                                                                                                                     
 psql (9.6.11)  
@@ -11,16 +13,17 @@ postgres=# create database mydatabase;
 CREATE DATABASE   
 
 ------------ To show all DB List ------------ 
-postgres=# \l 
+\l to see all DB
+\c to connect to DB
+\dn to show schema
 
-postgres=# \c mydatabase; 
-You are now connected to database "mydatabase" as user "postgres".  
 
-mydatabase=# \d employee;  
-Describes table
+\l - Display database
+\c - Connect to database
+\dn - List schemas
+\dt - List tables inside public schemas
+\dt schema1. - List tables inside particular schemas. For eg: 'schema1'.
 
-postgres=# \q
-Exit form DB
 
 
 :::::::: Executing Dmp :::::::
@@ -42,27 +45,11 @@ pg_dump -U postgres --schema=jvvnlpgrs jvvnl_instance > D:\TestWorkSpaces\ONE_SC
 
 
 
-/*
-Navicat PGSQL Data Transfer
+----------------------------------------------------- POSTGRES QUERIES ---------------------------------------------
+CREATE SEQUENCE person_seq START 2;
 
-Source Server         : LOCAL_SYSTEM
-Source Server Version : 90611
-Source Host           : localhost:5432
-Source Database       : mydatabase
-Source Schema         : public
-
-Target Server Type    : PGSQL
-Target Server Version : 90611
-File Encoding         : 65001
-
-Date: 2019-01-25 17:37:34
-*/
-
-
--- ----------------------------
--- Table structure for person
--- ----------------------------
 DROP TABLE IF EXISTS "public"."person";
+
 CREATE TABLE "public"."person" (
 "id" numeric(10) DEFAULT nextval('person_seq'::regclass),
 "name" varchar(10) COLLATE "default",
@@ -72,19 +59,13 @@ WITH (OIDS=FALSE)
 
 ;
 
-CREATE TABLE person(id numeric(10),name varchar(10),country varchar(10));
-
-
--- ----------------------------
--- Records of person
--- ----------------------------
 INSERT INTO "public"."person" VALUES ('1', 'RAM', 'NEPAL');
-INSERT INTO "public"."person" VALUES ('2', 'RAM2', 'NEPAL');
-INSERT INTO "public"."person" VALUES ('3', 'RAM3', 'NEPAL');
-INSERT INTO "public"."person" VALUES ('4', 'RAM4', 'NEPAL');
-INSERT INTO "public"."person" VALUES ('5', 'RAM5', 'NEPAL');
-INSERT INTO "public"."person" VALUES ('6', 'RAM6', 'NEPAL');
 
--- ----------------------------
--- Alter Sequences Owned By 
--- ----------------------------
+CREATE SEQUENCE person_seq START 2;
+SELECT nextval('person_seq');
+
+ALTER SEQUENCE person_seq RESTART WITH 15;
+SELECT setval('person_seq', 10);
+
+
+
