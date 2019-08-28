@@ -80,6 +80,8 @@ ALTER TABLE CUSTOMERS MODIFY (NAME varchar2(60),CITY varchar2(60)); -- MODIFY  M
 ALTER TABLE CUSTOMERS DROP COLUMN MOBILE;  							-- DROPPING A COLUMN
 ALTER TABLE CUSTOMERS RENAME COLUMN NAME to CUSTOMER_NAME;          -- RENAMING A COLUMN
 ALTER TABLE CUSTOMERS RENAME TO OURCUSTOMERS; 						-- RENAMING A TBALE
+ALTER TABLE CANCELLED_PAYMENTS MODIFY RESPONSE VARCHAR(200);		-- resizing a column
+
 
 -----------------------------------DROPPING A TABLE------------------------------------
 --IT IS USED T DELETE ENTIRE RECORDS ALONG WITH TABLE STRUCTURE
@@ -88,7 +90,7 @@ ALTER TABLE CUSTOMERS RENAME TO OURCUSTOMERS; 						-- RENAMING A TBALE
 --SCHEMA_NAME: It specifies the name of the schema that owns the table.
 --TABLE_NAME : It specifies the name of the table which you want to remove from the Oracle database.
 --CASCADE CONSTRAINTS: It is optional. If specified, it will drop all referential integrity constraints as well.
---PURGE: It is also optional. If specified, the table and its dependent objects are placed in the recycle bin and can?t be recovered.
+--PURGE: It is also optional. If specified, the table and its dependent objects are placed in the recycle bin and can't be recovered.
 DROP TABLE OURCUSTOMERS;
 ----------------------DELETING A RCORD FROM TABLE--------------------
 DELETE FROM CUSTOMERS WHERE CUSTOMER_NAME='Sohan';
@@ -200,17 +202,19 @@ BEGIN
 END;
 
 
-Table Details in ORACLE=================================================>
+Table Details in POSTGRES=================================================>
 SELECT * FROM all_tables WHERE owner = 'IREO_SKYON';
 SELECT * FROM user_tables WHERE table_name = 'LEDGER';
 SELECT * FROM dba_tables WHERE table_name='LEDGER';
 
-SELECT TABLE_NAME,COLUMN_NAME,DATA_TYPE,DATA_LENGTH FROM USER_TAB_COLUMNS WHERE TABLE_NAME='LEDGER';
-SELECT TABLE_NAME,COLUMN_NAME,DATA_TYPE,DATA_LENGTH FROM ALL_TAB_COLUMNS WHERE TABLE_NAME='LEDGER' AND OWNER='IREO_SKYON';
+SELECT COLUMN_ID,TABLE_NAME,COLUMN_NAME,DATA_TYPE,DATA_LENGTH FROM USER_TAB_COLUMNS WHERE TABLE_NAME='LEDGER';
+SELECT COLUMN_ID,TABLE_NAME,COLUMN_NAME,DATA_TYPE,DATA_LENGTH FROM ALL_TAB_COLUMNS WHERE TABLE_NAME='LEDGER' AND OWNER='IREO_SKYON';
 
 Table Details in POSTGRES=================================================>
-SELECT table_name,column_name,data_type,character_maximum_length 
+SELECT ordinal_position as index,column_name,data_type,udt_name,is_nullable,character_maximum_length,numeric_precision
 FROM information_schema.columns WHERE table_schema='jvvnlpgrs' AND table_name='ncpt_onlinepaymentsbd';
+
+ALTER TABLE single_window_status ALTER COLUMN status TYPE NUMERIC(10) USING status::numeric(10,0);
 
 
 -----------query to fetch only the first name(string before space) from the FullName column in oracle---------
@@ -316,7 +320,7 @@ max(CREATEDDATE) AS FROM_DATE,
 min(CREATEDDATE) AS TO_DATE
 FROM ONLINE_PAYMENT WHERE CREATEDDATE > SYSDATE -(7/24);
 
-SELECT count(*) FROM ONLINE_PAYMENT WHERE CREATEDDATE > SYSDATE -(24/24);
+SELECT count(*) FROM ONLINE_PAYMENT WHERE CREATEDDATE > SYSDATE -(24/24); -- today
 SELECT count(*) FROM ONLINE_PAYMENT WHERE CREATEDDATE >= SYSDATE - 7/(24*60);
 
 
@@ -336,6 +340,28 @@ and ncpt_onlinepaymentsbd.transactionid='';
 ALTER TABLE billdesk
 ADD COLUMN status VARCHAR(20);
 
+CREATE TABLE departments (
+  ID           NUMBER(10)    NOT NULL,
+  DESCRIPTION  VARCHAR2(50)  NOT NULL
+);
+
+ALTER TABLE departments ADD (
+  CONSTRAINT dept_pk PRIMARY KEY (ID)
+);
+
+CREATE SEQUENCE dept_seq START WITH 1;
+
+Trigger definition:
+
+CREATE OR REPLACE TRIGGER dept_bir 
+BEFORE INSERT ON departments 
+FOR EACH ROW
+
+BEGIN
+  SELECT dept_seq.NEXTVAL
+  INTO   :new.id
+  FROM   dual;
+END;
 
 ************************************************SOURCES FOR PROCEDURE******************************************************
 ************************* https://www.mkyong.com/oracle/oracle-stored-procedure-select-into-example/ **********************
