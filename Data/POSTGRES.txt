@@ -110,8 +110,9 @@ INSERT INTO "public"."person" VALUES ('6', 'RAM6', 'NEPAL');
 ===================================PLSQL===========================================
 =================HOW TO USE LOOP AND CREATE QUERY AND EXECUTE======================
 ===================================================================================
-------------------------------------		  SELECT * from  meter_data.report3(5);
---------------------------------------------		DROP FUNCTION report3(numeric);
+
+------------------------------------ SELECT * from  meter_data.report3(5);
+-------------------------------------------- DROP FUNCTION report3(numeric);
 
 CREATE OR REPLACE FUNCTION report3(levelcode NUMERIC)
  RETURNS TABLE (
@@ -147,15 +148,15 @@ BEGIN
 			END IF;
 			counting := counting + max_count;
 			count := count + 1 ;
-    END LOOP;
-query1:=
-'SELECT (SELECT level_name FROM meter_data.location_master WHERE mapping_code=A.level)as name_of_LEVEL,'||
-					 '(SELECT location_name FROM meter_data.location_master WHERE mapping_code=A.level)as LEVEL,'||
-					  'A.no_consumer,A.no_of_meter,A.consumer_with_no_meter,A.postpaid_meter FROM'||
-			'(SELECT ('||str1||')as level,count(mdmm.*)as no_consumer,count(mdmm.mtrno)as no_of_meter,(count(mdmm.*)-count(mdmm.mtrno))'||
-			'as consumer_with_no_meter,count(meter_type)as postpaid_meter FROM meter_data.master_main mdmm'||
-			 ' WHERE end_location_code is not null GROUP BY '||str2||')A';
-		--RAISE NOTICE '%', query1;
+END LOOP;
+	query1:=
+	'SELECT (SELECT level_name FROM meter_data.location_master WHERE mapping_code=A.level)as name_of_LEVEL,'||
+	'(SELECT location_name FROM meter_data.location_master WHERE mapping_code=A.level)as LEVEL,'||
+	'A.no_consumer,A.no_of_meter,A.consumer_with_no_meter,A.postpaid_meter FROM'||
+	'(SELECT ('||str1||')as level,count(mdmm.*)as no_consumer,count(mdmm.mtrno)as no_of_meter,(count(mdmm.*)-count(mdmm.mtrno))'||
+	'as consumer_with_no_meter,count(meter_type)as postpaid_meter FROM meter_data.master_main mdmm'||
+	' WHERE end_location_code is not null GROUP BY '||str2||')A';
+--RAISE NOTICE '%', query1;
  RETURN QUERY
     EXECUTE query1;
 END; $$
@@ -163,4 +164,47 @@ LANGUAGE 'plpgsql';
 
 
 
+------------ SELECT * FROM return_text(5);
+-------------------------------------------- DROP FUNCTION return_text(INTEGER);
 
+CREATE OR REPLACE FUNCTION return_text(lc INTEGER) 
+RETURNS TABLE (
+		id INTEGER,info TEXT,text VARCHAR
+)AS $$
+DECLARE
+    arow record;
+		max_count NUMERIC(2);
+		count NUMERIC :=1;
+		counting NUMERIC :=1;
+		str1 VARCHAR :='';
+		str2 VARCHAR :='';
+BEGIN
+   FOR arow in
+     SELECT * FROM meter_data.location_levels WHERE level_code<=lc ORDER BY level_code
+    LOOP
+			max_count  := arow.max_count;
+			IF count < lc THEN
+					str1 := str1||'substr(end_location_code,'||counting||','||max_count||') ||''''|| ';
+					str2 := str2||'substr(end_location_code,'||counting||','||max_count||') , ';
+			ELSE
+					str1 := str1||'substr(end_location_code,'||counting||','||max_count||')';
+					str2 := str2||'substr(end_location_code,'||counting||','||max_count||')';
+			END IF;
+			counting := counting + max_count;
+			count := count + 1 ;
+    END LOOP;
+		RETURN QUERY
+			SELECT 1 as id,'level show'as info,str1 as text UNION SELECT 2 as id,'group by'as info,str2 as text;
+END;
+$$ LANGUAGE plpgsql;
+
+
+==============================================================================
+After set listen_addresses = '*' in postgresql.conf
+
+Edit the hba_file.conf file and add the following entry at the very end of file:
+
+host    all             all              0.0.0.0/0                       md5
+host    all             all              ::/0                            md5
+
+pg_ctl -D "D:\PSG_SQL\data" restart
